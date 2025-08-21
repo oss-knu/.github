@@ -113,8 +113,9 @@ Teleport 오픈소스를 활용하여 외부 사용자는 반드시 Root Cluster
   - DBA은 `db` NS 한정  
   - Auditor는 조회만 가능 (변경 불가)  
 - **최소 권한 원칙**(Principle of Least Privilege) 실현  
-- 그림:  
-<img src="../images/roleBinding.png" width="660px" />
+- 그림:
+<img src="../images/RBAC.png" width="660px" />
+
 
 ---
 
@@ -159,8 +160,8 @@ Teleport 오픈소스를 활용하여 외부 사용자는 반드시 Root Cluster
 - Root Cluster Web UI  
   <img src="../images/teleport_main.png" width="660px" />
 
-- RBAC Role 정의 화면  
-  <img src="../images/RBAC.png" width="660px" />
+- RBAC Role 정의 화면 예시
+  <img src="../images/roleBinding.png" width="660px" />
 
 - Teleport Audit Log  
   <img src="../images/Audit.png" width="660px" />
