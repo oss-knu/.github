@@ -145,10 +145,10 @@ Teleport 오픈소스를 활용하여 외부 사용자는 반드시 Root Cluster
 
 ## 개발 과정
 
-| Root Cluster | [Root Cluster](https://github.com/oss-knu/root-cluster) |
+| Root Cluster ReadMe| [Root Cluster](https://github.com/oss-knu/root-cluster) |
 |-----------|------------|
-| Leaf Cluster | [Leaf Cluster](https://github.com/oss-knu/leaf-cluster) |
-| Log & Audit | [Log-audit](https://github.com/oss-knu/log-audit) |
+| Leaf Cluster ReadMe| [Leaf Cluster](https://github.com/oss-knu/leaf-cluster) |
+| Log & Audit ReadMe| [Log-audit](https://github.com/oss-knu/log-audit) |
 
 
 
