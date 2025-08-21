@@ -19,9 +19,7 @@ Teleport 오픈소스를 활용하여 외부 사용자는 반드시 Root Cluster
 
 ---
 ## 시연영상
-
-[![시연영상](https://img.youtube.com/vi/7vggGxFatCA/0.jpg)](https://www.youtube.com/watch?v=7vggGxFatCA)
-
+[https://www.youtube.com/watch?v=7vggGxFatCA](https://www.youtube.com/watch?v=7vggGxFatCA)
 
 ---
 ## 시스템 구성 및 아키텍처
