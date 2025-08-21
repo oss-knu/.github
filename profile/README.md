@@ -72,7 +72,7 @@
 
 3. **접속 감사 (Audit)**  
    - Teleport 로그 → Logstash → OpenSearch
-   ![로고](../images/log_flow.png)
+   ![로고](../images/log_audit_flow.png)
 
 4. **실시간 모니터링**  
    - OpenSearch Dashboards 시각화  
@@ -90,7 +90,7 @@
 
 1. **Root Cluster 구축**  
    - Teleport 설치 및 보안 그룹 최소 포트(443, 3024, 3025, 3026) 허용  
-   ![로고](../images/EC2_auth.png)
+   ![로고](../images/EC2_port.png)
 
 2. **Leaf Cluster 구성**  
    - k3s 단일 노드 환경  
