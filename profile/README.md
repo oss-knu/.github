@@ -58,12 +58,34 @@ Teleport 오픈소스를 활용하여 외부 사용자는 반드시 Root Cluster
 
 ## 개발 환경
 
-- **Root Cluster**: AWS EC2 (Ubuntu 24.04 LTS)  
-- **Leaf Cluster**: LG U+ 홈 서버 (사설망, k3s 단일 노드)  
-- **Teleport**: v17.5.6 (OSS)  
-- **Helm**: v3.18.3, 공식 Teleport Kube Agent 차트 사용  
-- **CLI**: tsh, tctl, kubectl  
-- **로그/모니터링**: Logstash + OpenSearch + Dashboards  
+###  1. 클라우드/서버 환경
+
+#### Root Cluster (AWS EC2 t3.large / Ubuntu 24.04 LTS)
+- Teleport Root Cluster 설치 및 Proxy/Auth 서비스 실행  
+- 외부에서 유일하게 노출되는 진입점으로 `:443`, `:3024`, `:3025` 포트 개방  
+- 보안 그룹에서 HTTPS(443)과 Teleport 터널링(3024, 3025, 3026) 포트만 허용  
+- 방화벽으로 불필요한 인바운드 차단 → **Bastion 역할 수행**  
+
+#### Leaf Cluster (LG U+ 홈 서버 / 이중 NAT 환경, 사설망)
+- Public IP 미할당 → 외부에서 직접 접근 불가  
+- `k3s v1.32.6` 기반 Kubernetes Cluster 실행  
+- Teleport Kube Agent를 Pod 형태로 배포 → Root와 mTLS 기반 Reverse Tunnel로 연결  
+- 네트워크 레벨에서 **Root Cluster Proxy와의 세션만 허용**  
+- 방화벽 정책 :  
+  - K3s API Server(6443) → 외부 비공개  
+  - 내부 Pod/Service 통신만 허용  
+- PoC 환경: 단일 노드로 단순화하여 운영 (필요 시 다중 노드 확장 가능)  
+
+### 2. 소프트웨어 스택
+
+| 구분            | 구성/버전                                           | 역할/기능                                                                 |
+|-----------------|---------------------------------------------------|--------------------------------------------------------------------------|
+| **Teleport**    | v17.5.6 (Open Source Edition)                     | Root Cluster → 인증/인가, 세션 로깅<br>Leaf Cluster → Kube Agent 배포, 내부 k8s API 접근 프록시 |
+| **Helm**        | v3.18.3 / teleport-kube-agent chart v17.5.6       | Teleport 공식 Helm Chart 저장소 사용                                      |
+| **CLI 도구**    | tsh, tctl, kubectl                                | 클러스터 인증, 관리, K8s 리소스 제어                                      |
+| **로깅/모니터링** | OpenSearch, OpenSearch Dashboards                  | Teleport Audit Logs → Logstash 수집 → OpenSearch 저장 → Dashboards 시각화<br>접속 이력, K8s 리소스 접근 로그, 사용자 세션 로그 통합 관리 |
+
+
 
 ---
 
@@ -71,56 +93,57 @@ Teleport 오픈소스를 활용하여 외부 사용자는 반드시 Root Cluster
 
 ## 주요 기능
 
-1. **망 분리 보안 접속**  
-   - Root Proxy 단일 진입점  
-   - mTLS 기반 K8s API 안전 접속
-    <img src="../images/auth_flow.png" width="660px" />
+### 1. 망 분리 보안 접속
+- 외부 사용자는 반드시 **Root Cluster Proxy**를 통해서만 Leaf Cluster 접근 가능  
+- Teleport Proxy ↔ Kube Agent 간 **mTLS 터널링**으로 안전한 K8s API 접근 보장  
+- 그림:  
+<img src="../images/auth_flow.png" width="660px" />
 
+---
 
-2. **RBAC 이중 연동**  
-   - Teleport Role ↔ Kubernetes RBAC 바인딩  
-   - 네임스페이스(`app/db/mgmt/dmz`)별 최소 권한 접근
-   <img src="../images/roleBinding.png" width="660px" />
-   
+### 2. RBAC 이중 연동
+- **Teleport Role ↔ Kubernetes RBAC 바인딩**  
+- 네임스페이스 구분: `app`, `db`, `mgmt`, `dmz`  
+- 예시:  
+  - App 개발자는 `app` NS만 접근 가능  
+  - DBA은 `db` NS 한정  
+  - Auditor는 조회만 가능 (변경 불가)  
+- **최소 권한 원칙**(Principle of Least Privilege) 실현  
+- 그림:  
+<img src="../images/roleBinding.png" width="660px" />
 
-3. **접속 감사 (Audit)**  
-   - Teleport 로그 → Logstash → OpenSearch
-   <img src="../images/log_audit_flow.png" width="660px" />
+---
 
-4. **실시간 모니터링**  
-   - OpenSearch Dashboards 시각화  
-   - 비인가 접근 탐지 및 알림 기능  
-   <img src="../images/DashBoard.png" width="660px" />
+### 3. 접속 감사 (Audit)
+- Teleport 자체 로그로 **모든 행위 기록**
+- 로그 처리 과정:  
+  1. 로컬 로그 파일 저장  
+  2. Logstash → OpenSearch 적재  
+- 그림:  
+<img src="../images/log_audit_flow.png" width="660px" />
 
+---
 
-5. **Zone 기반 접근 제어**  
-   - 네임스페이스별 논리적 격리  
-   - RBAC 이중 검증 구조  
-   <img src="../images/namespace.png" width="440px" />
+### 4. 모니터링 및 이상 징후 탐지
+- OpenSearch Dashboards로 **실시간 로그 시각화**  
+- Error 이벤트 발생 시 **알림 기능**으로 관리자 대응 지원  
+- 그림:  
+<img src="../images/DashBoard.png" width="660px" />
+
+---
+
+### 5. Zone 기반 접근 제어
+- 네임스페이스(`App/DB/Mgmt/DMZ`) 별 **논리적 격리 환경** 구성  
+- **Teleport RBAC + Kubernetes RBAC** 이중 제어로 Zone 간 무단 접근 차단  
+
 
 ---
 
 ## 개발 과정
 
-1. **Root Cluster 구축**  
-   - Teleport 설치 및 보안 그룹 최소 포트(443, 3024, 3025, 3026) 허용  
-   <img src="../images/EC2_port.png" width="660px" />
-
-2. **Leaf Cluster 구성**  
-   - k3s 단일 노드 환경  
-   - Helm으로 Teleport Kube Agent 배포  
-   <img src="../images/helmchart.png" width="660px" />
-
-3. **RBAC 연동**  
-   - Teleport Role ↔ Kubernetes RoleBinding 매핑  
-   <img src="../images/role.png" width="660px" />
-
-4. **엔드투엔드 접속 테스트**  
-   - `tsh login → tsh kube login → kubectl get pods`  
-
-5. **로그 수집 및 시각화**  
-   - Teleport Audit 로그 → Logstash → OpenSearch  
-   <img src="../images/logs.png" width="660px" />
+- [Root Cluster README](./root-cluster/README.md)
+- [Leaf Cluster README](./leaf-cluster/README.md)
+- [Log-audit README](./log-audit/README.md)
 
 
 ---
