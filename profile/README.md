@@ -133,7 +133,7 @@ Teleport 오픈소스를 활용하여 외부 사용자는 반드시 Root Cluster
 - OpenSearch Dashboards로 **실시간 로그 시각화**  
 - Error 이벤트 발생 시 **알림 기능**으로 관리자 대응 지원  
 - 그림:  
-<img src="../images/DashBoard.png" width="660px" />
+<img src="../images/alert.png" width="660px" />
 
 ---
 
