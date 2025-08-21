@@ -45,8 +45,6 @@
 - **CLI**: tsh, tctl, kubectl  
 - **로그/모니터링**: Logstash + OpenSearch + Dashboards  
 
-[📊 그림: 개발 환경 다이어그램]
-
 ---
 
 ## 🏗️ 시스템 구성 및 아키텍처
@@ -58,8 +56,6 @@
 - 모든 접근은 **Root Proxy → mTLS Reverse Tunnel → Leaf Kube Agent → K8s API**  
 - Teleport 감사 로그는 Logstash → OpenSearch → Dashboards로 수집·시각화  
 
-[📊 그림: Root–Leaf 아키텍처 다이어그램]
-
 ---
 
 ## 🔑 주요 기능
@@ -68,28 +64,25 @@
    ![로고](../images/auth_flow.png)
    - Root Proxy 단일 진입점  
    - mTLS 기반 K8s API 안전 접속  
-   - [📊 그림: 보안접속 플로우 다이어그램]
 
 2. **RBAC 이중 연동**  
    - Teleport Role ↔ Kubernetes RBAC 바인딩  
    - 네임스페이스(`app/db/mgmt/dmz`)별 최소 권한 접근  
-   - [📊 그림: RoleBinding YAML & Teleport Role 캡처]
+   ![로고](../images/roleBinding.png)
 
 3. **접속 감사 (Audit)**  
    - Teleport 로그 → Logstash → OpenSearch
-  
    ![로고](../images/log_flow.png)
-   - [📊 그림: 감사 로그 흐름도]
 
 4. **실시간 모니터링**  
    - OpenSearch Dashboards 시각화  
    - 비인가 접근 탐지 및 알림 기능  
-   - [📊 그림: Dashboards 화면 캡처]
+   ![로고](../images/DashBoard.png)
 
 5. **Zone 기반 접근 제어**  
    - 네임스페이스별 논리적 격리  
    - RBAC 이중 검증 구조  
-   - [📊 그림: kubectl get ns 캡처]
+   ![로고](../images/namespace.png)
 
 ---
 
@@ -97,24 +90,23 @@
 
 1. **Root Cluster 구축**  
    - Teleport 설치 및 보안 그룹 최소 포트(443, 3024, 3025, 3026) 허용  
-   - [📊 EC2 보안그룹 캡처]
+   ![로고](../images/EC2_auth.png)
 
 2. **Leaf Cluster 구성**  
    - k3s 단일 노드 환경  
-   - Helm으로 Teleport Kube Agent 배포  
-   - [📊 helm list 캡처]
+   - Helm으로 Teleport Kube Agent 배포
+    ![로고](../images/helmchart.png) 
 
 3. **RBAC 연동**  
    - Teleport Role ↔ Kubernetes RoleBinding 매핑  
-   - [📊 Role YAML & Web UI 캡처]
+   ![로고](../images/role.png)
 
 4. **엔드투엔드 접속 테스트**  
    - `tsh login → tsh kube login → kubectl get pods`  
-   - [📊 터미널 캡처: 성공/차단 예시]
 
 5. **로그 수집 및 시각화**
    - Teleport Audit 로그 → Logstash → OpenSearch  
-   - [📊 OpenSearch 인덱스 및 Dashboards 캡처]
+   ![로고](../images/logs.png)
 
 ---
 
@@ -123,11 +115,11 @@
 ![로고](../images/auth_실패.png)
 ![로고](../images/alert.png)
 
-- Root Cluster Web UI [📊 캡처]  
-- RBAC Role 정의 화면 [📊 캡처]  
-- Teleport Audit Log [📊 캡처]  
-- OpenSearch Dashboards [📊 캡처]  
-- 비인가 접근 탐지 결과 [📊 캡처]  
+- Root Cluster Web UI ![로고](../images/teleport_main.png)
+- RBAC Role 정의 화면 ![로고](../images/RBAC.png)  
+- Teleport Audit Log ![로고](../images/Audit.png)
+- OpenSearch Dashboards  ![로고](../images/DashBoard.png)
+- 비인가 접근 탐지 결과 ![로고](../images/alert.png)  
 
 ---
 
