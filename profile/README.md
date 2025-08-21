@@ -1,5 +1,7 @@
 # 🛡️ Teleport 기반 망분리 Kubernetes 환경 보안접속 관리 체계
 
+![로고](../images/메인.png)
+
 ## 👥 팀 정보
 - **팀 명:** 오픈소스에서 살아남기  
 - **팀 인원:** 박재영, 박지현, 최정식, 한재준  
@@ -49,6 +51,9 @@
 
 ## 🏗️ 시스템 구성 및 아키텍처
 
+![로고](../images/아키텍처.png)
+
+
 - Root Cluster (외부망 Bastion) ↔ Leaf Cluster (내부망 k3s)  
 - 모든 접근은 **Root Proxy → mTLS Reverse Tunnel → Leaf Kube Agent → K8s API**  
 - Teleport 감사 로그는 Logstash → OpenSearch → Dashboards로 수집·시각화  
@@ -60,6 +65,7 @@
 ## 🔑 주요 기능
 
 1. **망 분리 보안 접속**  
+   ![로고](../images/auth_flow.png)
    - Root Proxy 단일 진입점  
    - mTLS 기반 K8s API 안전 접속  
    - [📊 그림: 보안접속 플로우 다이어그램]
@@ -70,7 +76,9 @@
    - [📊 그림: RoleBinding YAML & Teleport Role 캡처]
 
 3. **접속 감사 (Audit)**  
-   - Teleport 로그 → Logstash → OpenSearch  
+   - Teleport 로그 → Logstash → OpenSearch
+  
+   ![로고](../images/log_flow.png)
    - [📊 그림: 감사 로그 흐름도]
 
 4. **실시간 모니터링**  
@@ -104,13 +112,16 @@
    - `tsh login → tsh kube login → kubectl get pods`  
    - [📊 터미널 캡처: 성공/차단 예시]
 
-5. **로그 수집 및 시각화**  
+5. **로그 수집 및 시각화**
    - Teleport Audit 로그 → Logstash → OpenSearch  
    - [📊 OpenSearch 인덱스 및 Dashboards 캡처]
 
 ---
 
 ## 📦 결과물
+
+![로고](../images/auth_실패.png)
+![로고](../images/alert.png)
 
 - Root Cluster Web UI [📊 캡처]  
 - RBAC Role 정의 화면 [📊 캡처]  
