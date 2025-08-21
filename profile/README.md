@@ -3,10 +3,10 @@
 ![로고](../images/메인.png)
 
 ## 팀 정보
-| <img width="350" src=""> | <img width="350" src=""> | <img width="350" src=""> | <img width="350" src=""> |
-| ---------- | ----------  | ----------|  ---------- |
+| <a href="https://github.com/wodydl0" target="_blank"><img width="100" src="https://github.com/wodydl0.png"></a> | <a href="https://github.com/parkjihyeon124594" target="_blank"><img width="100" src="https://github.com/parkjihyeon124594.png"></a> | <a href="https://github.com/siksik-Choi" target="_blank"><img width="100" src="https://github.com/siksik-Choi.png"></a> | <a href="https://github.com/junjaebrother" target="_blank"><img width="100" src="https://github.com/junjaebrother.png"></a> |
+| :---: | :---: | :---: | :---: |
 | 박재영(팀장) | 박지현 | 최정식 | 한재준 |
-|Team Leader <br><br> Teleport Infra 구성 <br> Root-Leaf 아키텍처 구축 | Opensearch Dashboards Detector 구현  </br> Teleport 연동| Logstash Pipeline 구축 </br> Anomaly Detecting 및 Alerting 구현 | Teleport K8s Infra 구현 </br> RBAC 설계 및 구현 </br> Opensearch Dashboards 구성  |
+| Team Leader <br> Teleport Infra 구성 <br> Root-Leaf 아키텍처 구축 | Opensearch Dashboards Detector 구현  <br> Teleport 연동 | Logstash Pipeline 구축 <br> Anomaly Detecting 및 Alerting 구현 | Teleport K8s Infra 구현 <br> RBAC 설계 및 구현 <br> Opensearch Dashboards 구성 |
 
 ---
 
@@ -16,6 +16,12 @@
 Teleport 오픈소스를 활용하여 외부 사용자는 반드시 Root Cluster Proxy를 통해서만 내부 Kubernetes 리소스에 접근할 수 있으며, 이 과정에서 RBAC를 Teleport Role과 Kubernetes RoleBinding 간 이중으로 연동하여 최소 권한 원칙을 보장하였습니다.</br>
 또한, Teleport Audit 로그를 Logstash와 OpenSearch로 연계해 모든 접속·명령·세션 이력을 중앙에서 분석·시각화함으로써 비인가 접근 탐지 및 보안 가시성 확보를 실현하였습니다.</br>
 이를 통해 단순한 네트워크 분리가 아닌, 접근 통제·행위 감사·실시간 모니터링이 결합된 망분리 보안 접속 관리 모델을 제시하였습니다.
+
+---
+## 시연영상
+
+[![시연영상](https://img.youtube.com/vi/7vggGxFatCA/0.jpg)](https://www.youtube.com/watch?v=7vggGxFatCA)
+
 
 ---
 ## 시스템 구성 및 아키텍처
@@ -141,9 +147,11 @@ Teleport 오픈소스를 활용하여 외부 사용자는 반드시 Root Cluster
 
 ## 개발 과정
 
-- [Root Cluster README](./root-cluster/README.md)
-- [Leaf Cluster README](./leaf-cluster/README.md)
-- [Log-audit README](./log-audit/README.md)
+| Root Cluster | [Root Cluster README](./root-cluster/README.md) |
+|-----------|------------|
+| Leaf Cluster | [Leaf Cluster README](./leaf-cluster/README.md) |
+| Log & Audit | [Log-audit README](./log-audit/README.md) |
+
 
 
 ---
@@ -166,47 +174,75 @@ Teleport 오픈소스를 활용하여 외부 사용자는 반드시 Root Cluster
   <img src="../images/auth_실패.png" width="660px" />  
   <img src="../images/alert.png" width="660px" />
 
+
+---
+
+## 보안 검증 및 탐지 성과
+
+- **Teleport 감사 로그 → OpenSearch 연계**  
+  약 1,200건의 비인가 접근 시나리오 로그 이벤트를 테스트한 결과, **100% 탐지 및 감사 기록 확인**  
+
+- **OpenSearch Dashboards 시각화**  
+  사용자별 / 리소스별 접근 시도 현황을 실시간으로 확인 가능 
+  → 이상 현상 실시간 탐지
+
+- **Teleport Proxy 단일 노출 구조 적용**  
+  외부에서 직접 API Server 접근 차단  
+  → **불필요한 포트 노출 0건**  
+
+- **감사 로그 이중 저장**  
+  로컬 파일 + OpenSearch에 저장 → **로그 유실 0건 및 무결성 보장**  
+
+- **주요 보안 시나리오 탐지 검증**  
+  내부자 위협, 무차별 로그인 시도, 권한 오남용 등 **탐지 커버리지 100% 확인**
+
+
 ---
 
 ## 기대 효과 및 활용 분야
 
-1. **운영 효율성**  
-   - RBAC 기반 최소 권한  
-   - 단일 Web UI 통합 관리  
+### 1. 운영 효율성
+- RBAC 기반 **최소 권한 접근 제어**로 관리 편의성 향상  
+- Teleport Web UI를 통한 **단일 접속 / 세션 관리**  
+- **Root–Leaf 구조**로 접속 경로 단순화  
 
-2. **보안성 강화**  
-   - Pod 단위 제어  
-   - 세션 로깅 & 감사 기능 확보  
+### 2. 보안성 강화
+- Pod/네임스페이스 단위까지 내려가는 **세밀한 권한 통제**  
+- **세션 로깅 & 명령 감사(Audit)로** 사용자 행위 추적 가능  
+- 내부자 위협 및 권한 남용을 **실시간 탐지**  
 
-3. **확장성과 유연성**  
-   - 멀티 클러스터 구조  
-   - 하이브리드 인프라 대응  
+### 3. 확장성과 유연성
+- 다수의 Leaf Cluster를 Root에 연동하여 **멀티 클러스터 지원**  
+- 퍼블릭 클라우드–온프레미스 혼합 환경 등 **하이브리드 인프라 대응**  
+- Helm/IaC 기반으로 **환경 확장 및 자동화 용이**  
 
-4. **규제 대응력**  
-   - 보안 규제 및 감사 요건 충족  
-
-5. **실무 적용성**  
-   - 실제 망분리 환경 반영  
-   - 실습 모델로 활용 가능  
-
----
-
-## 한계점 및 개선 사항
-- **한계**: 단일 노드 PoC, 로그 장기 보관 정책 미흡  
-- **개선**: OpenSearch 기반 보안 감시 고도화, HA 구조 확장  
-
----
-
-## 혁신성 및 차별성
-- VPN 대비 Zero-Trust 기반 접근 제어  
-- Teleport ↔ Kubernetes RBAC 이중 권한 검증  
-- 오픈소스만으로 보안 접속 및 관제 체계 구현  
 
 ---
 
 ## 향후 추진 계획
-- RBAC ↔ K8s 이중 통제 표준 템플릿 정립  
-- OpenSearch 기반 장기 보관 
-- IaC/Terraform 기반 운영 자동화 및 HA 구조 확장  
+
+### 1. Teleport RBAC ↔ Kubernetes RBAC 이중 통제 표준 템플릿 정립
+- Teleport와 Kubernetes RBAC 간 **권한 매핑 및 이중 통제 체계 설계**  
+  → 중복·충돌 없는 권한 관리 체계 확립  
+- 사용자·역할 기반 접근제어를 **표준 템플릿화**  
+  → 기관·조직 간 재사용 가능한 RBAC 운영 지침 마련  
+
+
+### 2. 감사·관제 체계 고도화 (OpenSearch 기반 로그 장기 보관 및 이상탐지)
+- Teleport 및 Kubernetes 이벤트 로그를 **OpenSearch로 통합 수집·저장**  
+  → 장기 보관 및 규제 준수 요건 충족  
+- **검색·대시보드·알림 체계 고도화**  
+  → 이상 행위(비정상 접속, 권한 상승, 정책 위반 등) 자동 탐지  
+- 장기 로그 관리 정책 수립  
+  → 보안 감사 및 포렌식 대응 비용·시간 절감  
+
+
+### 3. 운영 자동화(IaC) 및 고가용성(HA) 구조로 대규모 멀티클러스터 운영 검증
+- Terraform 등 IaC 도구 활용  
+  → 클러스터 배포·업데이트·정책 적용 자동화 구현  
+- **HA 아키텍처 적용**  
+  → Teleport Auth/Proxy 서버 및 Kubernetes Control Plane 무중단 운영 검증  
+- 멀티클러스터 환경에서 **운영망·개발망·테스트망 분리**  
+  → 중앙 관리 체계 확립  
 
 ---
