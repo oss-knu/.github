@@ -161,6 +161,7 @@ Teleport 오픈소스를 활용하여 외부 사용자는 반드시 Root Cluster
   <img src="../images/teleport_main.png" width="660px" />
 
 - RBAC Role 정의 화면 예시
+  
   <img src="../images/roleBinding.png" width="660px" />
 
 - Teleport Audit Log  
