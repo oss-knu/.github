@@ -12,7 +12,7 @@
 
 ## 프로젝트 소개
 
-**망분리 환경에서 Teleport와 Kubernetes RBAC을 결합한 보안 접속 관리 체계**를 구현하였습니다.</br>
+`망분리 환경에서 Teleport와 Kubernetes RBAC을 결합한 보안 접속 관리 체계`를 구현하였습니다.</br></br>
 Teleport 오픈소스를 활용하여 외부 사용자는 반드시 Root Cluster Proxy를 통해서만 내부 Kubernetes 리소스에 접근할 수 있으며, 이 과정에서 RBAC를 Teleport Role과 Kubernetes RoleBinding 간 이중으로 연동하여 최소 권한 원칙을 보장하였습니다.</br>
 또한, Teleport Audit 로그를 Logstash와 OpenSearch로 연계해 모든 접속·명령·세션 이력을 중앙에서 분석·시각화함으로써 비인가 접근 탐지 및 보안 가시성 확보를 실현하였습니다.</br>
 이를 통해 단순한 네트워크 분리가 아닌, 접근 통제·행위 감사·실시간 모니터링이 결합된 망분리 보안 접속 관리 모델을 제시하였습니다.
@@ -40,8 +40,8 @@ Teleport 오픈소스를 활용하여 외부 사용자는 반드시 Root Cluster
 ## 개발 배경 및 목적
 
 ### 추진 배경
-- 최근 보안 사고에서 드러난 기존 망분리 체계의 구조적 한계를 극복하기 위함  
-- 금융위원회·금융보안원 등 공공기관이 강조한 **“행위 기록·추적, 최소 권한, 중앙 감사 체계”** 가이드라인을 충족하는 시스템 설계 필요  
+- 최근 [보안 사고(ex. SKT)](https://www.msit.go.kr/bbs/view.do?sCode=user&mId=307&mPid=208&bbsSeqNo=94&nttSeqNo=3185964)에서 드러난 기존 망분리 체계의 구조적 한계를 극복하기 위함  
+- 금융위원회·금융보안원 등 공공기관이 강조한 **“행위 기록·추적, 최소 권한, 중앙 감사 체계”** [가이드라인](https://www.fsc.go.kr/no010101/82885?srchCtgry&curPage&srchKey&srchText&srchBeginDt&srchEndDt)을 충족하는 시스템 설계 필요 
 
 ### 기존 망분리 환경의 문제점
 - 내부자 위협 및 권한 남용 차단 실패  
