@@ -61,9 +61,9 @@
 ## 🔑 주요 기능
 
 1. **망 분리 보안 접속**  
-   ![로고](../images/auth_flow.png)
    - Root Proxy 단일 진입점  
-   - mTLS 기반 K8s API 안전 접속  
+   - mTLS 기반 K8s API 안전 접속
+   ![로고](../images/auth_flow.png)  
 
 2. **RBAC 이중 연동**  
    - Teleport Role ↔ Kubernetes RBAC 바인딩  
@@ -112,14 +112,18 @@
 
 ## 📦 결과물
 
-![로고](../images/auth_실패.png)
-![로고](../images/alert.png)
+- Root Cluster Web UI
+![로고](../images/teleport_main.png)
+- RBAC Role 정의 화면
 
-- Root Cluster Web UI ![로고](../images/teleport_main.png)
-- RBAC Role 정의 화면 ![로고](../images/RBAC.png)  
-- Teleport Audit Log ![로고](../images/Audit.png)
-- OpenSearch Dashboards  ![로고](../images/DashBoard.png)
-- 비인가 접근 탐지 결과 ![로고](../images/alert.png)  
+![로고](../images/RBAC.png)  
+- Teleport Audit Log
+![로고](../images/Audit.png)
+- OpenSearch Dashboards
+![로고](../images/DashBoard.png)
+- 비인가 접근 탐지 결과
+![로고](../images/auth_실패.png)
+![로고](../images/alert.png)  
 
 ---
 
